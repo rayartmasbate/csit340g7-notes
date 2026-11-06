@@ -23,10 +23,25 @@ function Notes() {
 
     function handleChange(e) {
         const {name, value} = e.target
+        
         setFormData(prevFormData => ({
             ...prevFormData,
             [name]: value
         }))
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault()
+
+        if (!formData.title.trim() || !formData.body.trim()) return
+
+        const newNote = {
+            id: notes.length + 1,
+            title: formData.title.trim(),
+            body: formData.body.trim()
+        }
+        setNotes(prevNotes => [...prevNotes, newNote])
+        setFormData({ title: "", body: "" })
     }
 
   return (
@@ -44,7 +59,7 @@ function Notes() {
           />
         </div>
 
-        <form className="grid gap-3">
+        <form className="grid gap-3" onSubmit={handleSubmit}>
           <p className="text-[13px] font-normal tracking-wide text-[#949494]">NEW NOTE</p>
           <input
             name="title"
