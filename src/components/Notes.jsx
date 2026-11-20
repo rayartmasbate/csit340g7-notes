@@ -1,5 +1,5 @@
 import NoteCard from "./NoteCard"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 function Notes() {
 
@@ -20,6 +20,8 @@ function Notes() {
         title: "",
         body: ""
     })
+
+    useEffect(() => {localStorage.setItem("notes", JSON.stringify(notes))} , [notes])
 
     function handleChange(e) {
         const {name, value} = e.target
