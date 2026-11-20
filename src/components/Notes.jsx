@@ -14,6 +14,8 @@ const startingNotes = [
     }
 ]
 
+const emptyForm = { title:"", body:"" }
+
 function Notes() {
 
     const [notes, setNotes] = useState(() => {
@@ -21,7 +23,19 @@ function Notes() {
         return saved ? JSON.parse(saved) : startingNotes
     })
 
-    const [formData, setFormData] = useState({title: "", body: ""})
+    const [formData, setFormData] = useState(() => {
+        const savedDraft = localStorage.getItem('draft')
+        if(!savedDraft) return emptyForm
+        try {
+            const parsed = JSON.parse(savedDraft)
+            return {
+                title: typeof parsed.title === "string" ? parsed.title: "",
+                body: typeof parsed.body === "string" ? parsed.body: "",
+            }
+        } catch {
+            return emptyForm
+        }
+    })
 
     const titleRef = useRef(null)
 
@@ -54,12 +68,12 @@ function Notes() {
             body: formData.body.trim()
         }
         setNotes(prevNotes => [...prevNotes, newNote])
-        setFormData({ title: "", body: "" })
+        setFormData(emptyForm)
         titleRef.current.focus()
     }
 
     const handleDelete = useCallback((id) => {
-        setNotes(prevNotes => prevNotes.filter(note => note.id !== id))
+        setNotes(notes.filter((note) => note.id !== id))
     }, [notes])
 
     function handleEmptyNotes() {
