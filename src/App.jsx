@@ -1,10 +1,17 @@
 import Notes from './components/Notes.jsx'
 import Info from './components/Info.jsx'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SettingsContext } from './SettingsContext.js'
 
 function App() {
-  const [largeText, setLargeText] = useState(false)
+  const [largeText, setLargeText] = useState(() => {
+    const saved = localStorage.getItem("size")
+    return saved ? JSON.parse(saved) : false 
+  })
+
+  useEffect(()=> {
+    localStorage.setItem("size", JSON.stringify(largeText))
+  }, [largeText])
 
   return (
     <SettingsContext value={{ largeText, setLargeText }}>
